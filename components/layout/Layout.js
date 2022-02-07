@@ -16,7 +16,7 @@ function Layout(props) {
           }
 
           html {
-            font-size: 62, 5%; /* con esta línea conseguimos que 1.6 rem sea a 16px */
+            font-size: 62.5%; /* con esta línea conseguimos que 1.6 rem sea a 16px */
             box-sizing: border-box;
           }
 
