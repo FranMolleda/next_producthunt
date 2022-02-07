@@ -13,6 +13,10 @@ const Boton = styled.a`
     /* damos estilo al último elemento */
     margin-right: 0;
   }
+
+  &:hover {
+    cursor: pointer;
+  }
 `;
 
 export default Boton;

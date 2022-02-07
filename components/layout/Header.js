@@ -26,6 +26,7 @@ const Logo = styled.p`
 `;
 
 function Header() {
+  const usuario = false;
   return (
     <header
       css={css`
@@ -34,7 +35,12 @@ function Header() {
       `}
     >
       <ContenedorHeader>
-        <div>
+        <div
+          css={css`
+            display: flex;
+            align-items: center;
+          `}
+        >
           <Link href="/">
             <a>
               <Logo>P</Logo>
@@ -45,18 +51,35 @@ function Header() {
 
           <Navegacion />
         </div>
-        <div>
-          <p>Hola Fran</p>
-          <Boton bgColor="true" type="button">
-            Cerrar Sesión
-          </Boton>
-
-          <Link href="/">
-            <Boton bgColor="true">Login</Boton>
-          </Link>
-          <Link href="/">
-            <Boton>Crear Cuenta</Boton>
-          </Link>
+        <div
+          css={css`
+            display: flex;
+            align-items: center;
+          `}
+        >
+          {usuario ? (
+            <>
+              <p
+                css={css`
+                  margin-right: 2rem;
+                `}
+              >
+                Hola Fran
+              </p>
+              <Boton bgColor="true" type="button">
+                Cerrar Sesión
+              </Boton>
+            </>
+          ) : (
+            <>
+              <Link href="/login" passHref>
+                <Boton bgColor="true">Login</Boton>
+              </Link>
+              <Link href="/crear-cuenta" passHref>
+                <Boton>Crear Cuenta</Boton>
+              </Link>
+            </>
+          )}
         </div>
       </ContenedorHeader>
     </header>
