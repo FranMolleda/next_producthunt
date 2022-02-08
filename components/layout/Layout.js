@@ -47,7 +47,6 @@ function Layout(props) {
 
           h3 {
             font-family: "PT Sans", sans-serif;
-            font-weight: 700;
           }
 
           ul {
