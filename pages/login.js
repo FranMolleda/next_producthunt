@@ -31,7 +31,6 @@ export default function Login() {
   async function iniciarSesion() {
     try {
       const usuario = await signInWithEmailAndPassword(auth, email, password);
-      console.log(usuario);
       router.push("/");
     } catch (error) {
       console.error("Hubo un error al autenticar el usuario", error.message);
