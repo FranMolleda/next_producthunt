@@ -1,5 +1,20 @@
-function MyApp({ Component, pageProps }) {
-  return <Component {...pageProps} />;
-}
+import App from "next/app";
+import firebase, { FirebaseContext } from "../firebase";
+import useAutenticacion from "../hooks/useAutenticacion";
+
+const MyApp = ({ Component, pageProps }) => {
+  const usuario = useAutenticacion();
+
+  return (
+    <FirebaseContext.Provider
+      value={{
+        firebase,
+        usuario,
+      }}
+    >
+      <Component {...pageProps} />
+    </FirebaseContext.Provider>
+  );
+};
 
 export default MyApp;
