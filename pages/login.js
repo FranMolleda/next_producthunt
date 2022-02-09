@@ -78,7 +78,9 @@ export default function Login() {
             </Campo>
             {errores.password && <Error>{errores.password}</Error>}
 
-            {error && <Error>Email ya registrado</Error>}
+            {error && (
+              <Error>Email ya registrado o Contraseña incorrecta</Error>
+            )}
             <InputSubmit type="submit" value="Iniciar Sesión" />
           </Formulario>
         </>
