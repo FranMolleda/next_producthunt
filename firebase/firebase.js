@@ -1,13 +1,15 @@
-import app from "firebase/compat/app";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { initializeApp } from "firebase/app";
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  updateProfile,
+} from "firebase/auth";
 
 import firebaseConfig from "./config";
 
 class Firebase {
   constructor() {
-    if (!app.apps.lenght) {
-      app.initializeApp(firebaseConfig);
-    }
+    initializeApp(firebaseConfig);
     this.auth = getAuth();
   }
 
@@ -19,7 +21,7 @@ class Firebase {
       password
     );
 
-    return await nuevoUsuario.user.updateProfile({ displayName: nombre });
+    return await updateProfile(nuevoUsuario.user, { displayName: nombre });
   }
 }
 
