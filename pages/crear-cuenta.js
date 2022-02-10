@@ -25,8 +25,8 @@ export default function CrearCuenta() {
   const [error, setError] = useState(false);
   const { valores, errores, handleChange, handleSubmit, handleBlur } =
     useValidacion(STATE_INICIAL, validarCrearCuenta, crearCuenta);
-  const router = useRouter();
   const { nombre, email, password } = valores;
+  const router = useRouter();
 
   async function crearCuenta() {
     try {
