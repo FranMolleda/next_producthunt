@@ -11,6 +11,7 @@ import {
 
 import { FirebaseContext } from "../firebase";
 import { collection, addDoc } from "firebase/firestore";
+import { ref, getDownloadURL, uploadBytesResumable } from "@firebase/storage";
 
 //validaciones
 import useValidacion from "../hooks/useValidacion";
@@ -25,14 +26,18 @@ const STATE_INICIAL = {
 };
 
 export default function NuevoProducto() {
+  const { usuario, firebase } = useContext(FirebaseContext);
+
+  const [uploading, setUploading] = useState(false);
+  const [URLImage, setURLImage] = useState("");
+
   const [error, setError] = useState(false);
   const { valores, errores, handleChange, handleSubmit, handleBlur } =
     useValidacion(STATE_INICIAL, validarCrearProducto, crearProducto);
   const { nombre, empresa, imagen, url, descripcion } = valores;
 
   // context con las operaciones crud de firebase
-  const { usuario, firebase } = useContext(FirebaseContext);
-  const { db } = firebase;
+  const { db, app } = firebase;
 
   const router = useRouter();
 
@@ -47,6 +52,7 @@ export default function NuevoProducto() {
       nombre,
       empresa,
       url,
+      urlimagen: URLImage,
       descripcion,
       votos: 0,
       comentarios: [],
@@ -55,8 +61,44 @@ export default function NuevoProducto() {
 
     // Insertarlo en la BBDD
     const productos = await addDoc(collection(db, "productos"), producto);
+    return router.push("/");
   }
 
+  const handleImageUpload = (e) => {
+    // Se obtiene referencia de la ubicación donde se guardará la imagen
+    const file = e.target.files[0];
+    const imageRef = ref(firebase.storage, "products/" + file.name);
+
+    // Se inicia la subida
+    setUploading(true);
+
+    //Aquí le decimos en qué ruta (imageRef y qué archivo (file))
+    const uploadTask = uploadBytesResumable(imageRef, file);
+
+    // Registra eventos para cuando detecte un cambio en el estado de la subida
+    uploadTask.on(
+      "state_changed",
+      // Muestra progreso de la subida
+      (snapshot) => {
+        const progress =
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        console.log(`Subiendo imagen: ${progress}% terminado`);
+      },
+      // En caso de error
+      (error) => {
+        setUploading(false);
+        console.error(error);
+      },
+      // Subida finalizada correctamente
+      () => {
+        setUploading(false);
+        getDownloadURL(uploadTask.snapshot.ref).then((url) => {
+          console.log("Imagen disponible en:", url);
+          setURLImage(url);
+        });
+      }
+    );
+  };
   return (
     <div>
       h1
@@ -102,18 +144,16 @@ export default function NuevoProducto() {
               </Campo>
               {errores.empresa && <Error>{errores.empresa}</Error>}
 
-              {/*    <Campo>
+              <Campo>
                 <label htmlFor="imagen">Imagen</label>
                 <input
+                  accept="image/*"
                   type="file"
-                  id="imagen"
-                  name="imagen"
-                  value={imagen}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
+                  id="image"
+                  name="image"
+                  onChange={handleImageUpload}
                 />
               </Campo>
-              {errores.imagen && <Error>{errores.imagen}</Error>} */}
 
               <Campo>
                 <label htmlFor="url">URL</label>

@@ -6,14 +6,16 @@ import {
 } from "firebase/auth";
 /* import "firebase/firestore"; */
 import { getFirestore } from "firebase/firestore";
+import { getStorage } from "@firebase/storage";
 
 import firebaseConfig from "./config";
 
 class Firebase {
   constructor() {
-    initializeApp(firebaseConfig);
+    this.app = initializeApp(firebaseConfig);
     this.auth = getAuth();
     this.db = getFirestore();
+    this.storage = getStorage();
   }
 
   //Registra un usuario
