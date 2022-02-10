@@ -4,6 +4,8 @@ import {
   createUserWithEmailAndPassword,
   updateProfile,
 } from "firebase/auth";
+/* import "firebase/firestore"; */
+import { getFirestore } from "firebase/firestore";
 
 import firebaseConfig from "./config";
 
@@ -11,6 +13,7 @@ class Firebase {
   constructor() {
     initializeApp(firebaseConfig);
     this.auth = getAuth();
+    this.db = getFirestore();
   }
 
   //Registra un usuario
