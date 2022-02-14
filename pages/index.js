@@ -24,14 +24,12 @@ export default function Home() {
       let product = [];
       const docRef = await getDocs(collection(db, "productos"));
       docRef.forEach((doc) => {
-        return product.push(doc.data());
+        return product.push({ id: doc.id, ...doc.data() });
       });
       setProductos(product);
     };
     obtenerProductos();
   }, []);
-
-  console.log(productos);
 
   return (
     <div>

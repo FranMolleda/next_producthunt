@@ -1,9 +1,8 @@
 import React from "react";
 import styled from "@emotion/styled";
-/* import { formatDistance, subDays } from "date-fns";
- */
 import formatDistanceToNow from "date-fns/formatDistanceToNow";
 import { es } from "date-fns/locale";
+import Link from "next/link";
 
 const Producto = styled.li`
   padding: 4rem;
@@ -61,6 +60,7 @@ const Comentarios = styled.div`
 
 const Imagen = styled.img`
   width: 200px;
+  filter: contrast(1.8) brightness(1.5) grayscale(0.5);
 `;
 
 const Votos = styled.div`
@@ -96,7 +96,11 @@ const DetallesProducto = ({ producto }) => {
           <Imagen src={urlimagen} alt="imgaen producto" />
         </div>
         <div>
-          <Titulo>{nombre}</Titulo>
+          {/*  href="/productos/[id]" es la ruta de carpetas y archivos en pages */}
+          {/*   as={`/productos/${id}` por aquí le pasamos lo que queremos que el routing maneje */}
+          <Link href="/productos/[id]" as={`/productos/${id}`}>
+            <Titulo>{nombre}</Titulo>
+          </Link>
           <TextoDescripcion>{descripcion}</TextoDescripcion>
 
           <Comentarios>
