@@ -32,7 +32,7 @@ const Producto = () => {
   /* Esto es lo mismo que esto:const id = router.query.id; */
 
   // context de firebase
-  const { firebase } = useContext(FirebaseContext);
+  const { firebase, usuario } = useContext(FirebaseContext);
   useEffect(() => {
     if (id) {
       const obtenerProducto = async () => {
@@ -63,6 +63,24 @@ const Producto = () => {
     votos,
     creador,
   } = producto;
+
+  //Administrar y validar los votos
+  const votarProducto = () => {
+    if (!usuario) {
+      return router.push("/login");
+    }
+    //obtener y sumar un nuevo voto
+    const nuevoTotal = votos + 1;
+
+    //Actualizar en la BDD
+    doc(firebase.db, "productos", id).update({ votos: nuevoTotal });
+
+    //Actualizar el state
+    setProducto({
+      ...producto,
+      votos: nuevoTotal,
+    });
+  };
   return (
     <Layout>
       <>
@@ -84,17 +102,21 @@ const Producto = () => {
                 {formatDistanceToNow(new Date(creado), { locale: es })}
               </p>
               <p>
-                Publicado por: {creador.nombre} de {empresa}
+                Por: {creador.nombre} de {empresa}
               </p>
               <img src={urlimagen} alt="Imagen producto" />
               <p>{descripcion}</p>
-              <h2>Agrega tu comentario</h2>
-              <form>
-                <Campo>
-                  <input type="text" name="mensaje" />
-                </Campo>
-                <InputSubmit type="submit" value="Agregar Comentario" />
-              </form>
+              {usuario && (
+                <>
+                  <h2>Agrega tu comentario</h2>
+                  <form>
+                    <Campo>
+                      <input type="text" name="mensaje" />
+                    </Campo>
+                    <InputSubmit type="submit" value="Agregar Comentario" />
+                  </form>
+                </>
+              )}
               <h2
                 css={css`
                   margin: 2rem 0;
@@ -127,8 +149,7 @@ const Producto = () => {
                 >
                   {votos} Votos
                 </p>
-
-                <Boton>Votar</Boton>
+                {usuario && <Boton onClick={votarProducto}>Votar</Boton>}
               </div>
             </aside>
           </ContenedorProducto>
