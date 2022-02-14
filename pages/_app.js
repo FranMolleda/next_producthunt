@@ -1,6 +1,7 @@
 import App from "next/app";
 import firebase, { FirebaseContext } from "../firebase";
 import useAutenticacion from "../hooks/useAutenticacion";
+import "../public/static/css/app.css";
 
 const MyApp = ({ Component, pageProps }) => {
   const usuario = useAutenticacion();
