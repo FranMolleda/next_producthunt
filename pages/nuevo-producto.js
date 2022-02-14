@@ -20,7 +20,6 @@ import validarCrearProducto from "../validacion/validarCrearPorducto";
 const STATE_INICIAL = {
   nombre: "",
   empresa: "",
-  /* imagen: "", */
   url: "",
   descripcion: "",
 };
@@ -34,7 +33,7 @@ export default function NuevoProducto() {
   const [error, setError] = useState(false);
   const { valores, errores, handleChange, handleSubmit, handleBlur } =
     useValidacion(STATE_INICIAL, validarCrearProducto, crearProducto);
-  const { nombre, empresa, imagen, url, descripcion } = valores;
+  const { id, nombre, empresa, imagen, url, descripcion } = valores;
 
   // context con las operaciones crud de firebase
   const { db, app } = firebase;
@@ -57,6 +56,7 @@ export default function NuevoProducto() {
       votos: 0,
       comentarios: [],
       creado: Date.now(),
+      creador: { id: usuario.uid, nombre: usuario.displayName },
     };
 
     // Insertarlo en la BBDD
@@ -101,7 +101,6 @@ export default function NuevoProducto() {
   };
   return (
     <div>
-      h1
       <Layout>
         <>
           <h1
