@@ -1,18 +1,10 @@
 import React, { useState, useEffect, useContext } from "react";
 import Layout from "../components/layout/Layout";
-import { FirebaseContext } from "../firebase";
-import {
-  collection,
-  addDoc,
-  doc,
-  getDoc,
-  getDocs,
-  onSnapshot,
-} from "firebase/firestore";
 import DetallesProducto from "../components/layout/DetallesProducto";
+import useProductos from "../hooks/useProductos";
 
 export default function Home() {
-  const [productos, setProductos] = useState([]);
+  /*   const [productos, setProductos] = useState([]);
   const [todosproductos, setTodosProductos] = useState([]);
 
   const { firebase } = useContext(FirebaseContext);
@@ -29,8 +21,8 @@ export default function Home() {
       setProductos(product);
     };
     obtenerProductos();
-  }, []);
-
+  }, []); */
+  const { productos } = useProductos("creado");
   return (
     <div>
       <Layout>
