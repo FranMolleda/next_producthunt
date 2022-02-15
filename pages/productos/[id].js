@@ -19,11 +19,21 @@ const ContenedorProducto = styled.div`
   }
 `;
 
+const CreadorProducto = styled.p`
+  padding: 0.5rem 2rem;
+  background-color: #da552f;
+  color: #fff;
+  text-transform: uppercase;
+  font-weight: bold;
+  display: inline-block;
+  text-align: center;
+`;
 const Producto = () => {
   //State del componenteç
 
   const [producto, setProducto] = useState({});
   const [error, setError] = useState(false);
+  const [comentario, setComentario] = useState({});
   //Routing para obtener el id actual
   const router = useRouter();
   const {
@@ -83,7 +93,11 @@ const Producto = () => {
 
     //Actualizar en la BDD
     const productRef = doc(firebase.db, "productos", id);
-    setDoc(productRef, { votos: nuevoTotal, haVotado: nuevoHaVotado });
+    setDoc(
+      productRef,
+      { votos: nuevoTotal, haVotado: nuevoHaVotado },
+      { merge: true }
+    );
 
     //Actualizar el state
     setProducto({
@@ -91,6 +105,52 @@ const Producto = () => {
       votos: nuevoTotal,
     });
   };
+
+  //Funciones para crear comentarios
+  const comentarioChange = (e) => {
+    setComentario({ ...comentario, [e.target.name]: e.target.value });
+  };
+
+  //Identifica si el comentario es del creador del producto
+  const esCreador = (id) => {
+    if (creador.id === id) {
+      return true;
+    }
+  };
+
+  const agregarComentario = (e) => {
+    e.preventDefault();
+
+    if (!usuario) {
+      return router.push("/login");
+    }
+
+    //Información extra al comentario
+    setComentario({
+      usuarioId: usuario.uid,
+      usuarioNombre: usuario.displayName,
+    });
+
+    // Tomar copia de comentarios y agregar al arreglo
+    const nuevosComentarios = [...comentarios, comentario];
+
+    //Actualizar la BBDD
+    const productRef = doc(firebase.db, "productos", id);
+    setDoc(
+      productRef,
+      {
+        comentarios: nuevosComentarios,
+      },
+      { merge: true }
+    );
+
+    //Actualizar el state
+    setProducto({
+      ...producto,
+      comentarios: nuevosComentarios,
+    });
+  };
+
   return (
     <Layout>
       <>
@@ -119,9 +179,13 @@ const Producto = () => {
               {usuario && (
                 <>
                   <h2>Agrega tu comentario</h2>
-                  <form>
+                  <form onSubmit={agregarComentario}>
                     <Campo>
-                      <input type="text" name="mensaje" />
+                      <input
+                        type="text"
+                        name="mensaje"
+                        onChange={comentarioChange}
+                      />
                     </Campo>
                     <InputSubmit type="submit" value="Agregar Comentario" />
                   </form>
@@ -134,12 +198,36 @@ const Producto = () => {
               >
                 Comentarios
               </h2>
-              {comentarios.map((comentario) => (
-                <li key={id}>
-                  <p>{comentario.nombre}</p>
-                  <p>Escrito por: {comentario.usuarioNombre}</p>
-                </li>
-              ))}
+              {comentarios.length === 0 ? (
+                "Aún no hay comentarios"
+              ) : (
+                <ul>
+                  {comentarios.map((comentario, i) => (
+                    <li
+                      key={`${comentario.usuarioId}-${i}`}
+                      css={css`
+                        border: 1px solid #e1e1e1;
+                        padding: 2rem;
+                      `}
+                    >
+                      <p>{comentario.mensaje}</p>
+                      <p>
+                        Escrito por:{" "}
+                        <span
+                          css={css`
+                            font-weight: bold;
+                          `}
+                        >
+                          {comentario.usuarioNombre}
+                        </span>
+                      </p>
+                      {esCreador(comentario.usuarioId) && (
+                        <CreadorProducto>Es Cereador</CreadorProducto>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              )}
             </div>
 
             <aside>
