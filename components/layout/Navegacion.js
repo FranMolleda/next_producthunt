@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import Link from "next/link";
 import styled from "@emotion/styled";
 import { FirebaseContext } from "../../firebase";
+import { css } from "@emotion/core";
 
 const Nav = styled.nav`
   padding-left: 2rem;
@@ -30,7 +31,16 @@ function Navegacion() {
         </Link>
         {usuario && (
           <Link href="/nuevo-producto">
-            <a>Nuevo Producto</a>
+            <a
+              css={css`
+                display: inline-block;
+                &:hover {
+                  cursor: pointer;
+                }
+              `}
+            >
+              Nuevo Producto
+            </a>
           </Link>
         )}
       </Nav>
