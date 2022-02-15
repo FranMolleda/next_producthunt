@@ -4,24 +4,6 @@ import DetallesProducto from "../components/layout/DetallesProducto";
 import useProductos from "../hooks/useProductos";
 
 export default function Home() {
-  /*   const [productos, setProductos] = useState([]);
-  const [todosproductos, setTodosProductos] = useState([]);
-
-  const { firebase } = useContext(FirebaseContext);
-
-  const { db } = firebase;
-
-  useEffect(() => {
-    const obtenerProductos = async () => {
-      let product = [];
-      const docRef = await getDocs(collection(db, "productos"));
-      docRef.forEach((doc) => {
-        return product.push({ id: doc.id, ...doc.data() });
-      });
-      setProductos(product);
-    };
-    obtenerProductos();
-  }, []); */
   const { productos } = useProductos("creado");
   return (
     <div>

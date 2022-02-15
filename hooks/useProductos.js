@@ -15,7 +15,6 @@ import { FirebaseContext } from "../firebase";
 
 const useProductos = (orden) => {
   const [productos, setProductos] = useState([]);
-  const [todosproductos, setTodosProductos] = useState([]);
 
   const { firebase } = useContext(FirebaseContext);
 
