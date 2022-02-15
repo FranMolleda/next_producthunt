@@ -4,7 +4,7 @@ import Layout from "../../components/layout/Layout";
 import formatDistanceToNow from "date-fns/formatDistanceToNow";
 import { es } from "date-fns/locale";
 import { FirebaseContext } from "../../firebase";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 import Error404 from "../../components/layout/404";
 import { css } from "@emotion/core";
 import styled from "@emotion/styled";
@@ -48,7 +48,7 @@ const Producto = () => {
       };
       obtenerProducto();
     }
-  }, [id]);
+  }, [id, producto]);
 
   if (Object.keys(producto).length === 0) return "Cargando...";
 
@@ -62,18 +62,28 @@ const Producto = () => {
     urlimagen,
     votos,
     creador,
+    haVotado,
   } = producto;
 
   //Administrar y validar los votos
-  const votarProducto = () => {
+  const votarProducto = async () => {
     if (!usuario) {
       return router.push("/login");
     }
     //obtener y sumar un nuevo voto
     const nuevoTotal = votos + 1;
 
+    //Verificar si el usuario actual ha votado
+    if (haVotado.includes(usuario.uid)) {
+      return;
+    }
+
+    //Guardar el Id del usuario
+    const nuevoHaVotado = [...haVotado, usuario.uid];
+
     //Actualizar en la BDD
-    doc(firebase.db, "productos", id).update({ votos: nuevoTotal });
+    const productRef = doc(firebase.db, "productos", id);
+    setDoc(productRef, { votos: nuevoTotal, haVotado: nuevoHaVotado });
 
     //Actualizar el state
     setProducto({

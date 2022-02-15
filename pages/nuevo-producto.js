@@ -58,6 +58,7 @@ export default function NuevoProducto() {
       comentarios: [],
       creado: Date.now(),
       creador: { id: usuario.uid, nombre: usuario.displayName },
+      haVotado: [],
     };
 
     // Insertarlo en la BBDD
@@ -125,7 +126,7 @@ export default function NuevoProducto() {
                   <input
                     type="text"
                     id="nombre"
-                    placeholder="Tu Nombre"
+                    placeholder="Nombre del Producto"
                     name="nombre"
                     value={nombre}
                     onChange={handleChange}
